@@ -5,6 +5,8 @@ import { Layout } from './components/Layout';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import MyLeavesPage from './pages/MyLeavesPage';
+import ApprovalsPage from './pages/ApprovalsPage';
+import AdminUsersPage from './pages/AdminUsersPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 export default function App() {
@@ -20,6 +22,12 @@ export default function App() {
           <Route element={<ProtectedRoute />}>
             <Route element={<Layout />}>
               <Route path="/" element={<MyLeavesPage />} />
+              <Route element={<ProtectedRoute roles={['manager', 'admin']} />}>
+                <Route path="/approvals" element={<ApprovalsPage />} />
+              </Route>
+              <Route element={<ProtectedRoute roles={['admin']} />}>
+                <Route path="/admin/users" element={<AdminUsersPage />} />
+              </Route>
             </Route>
           </Route>
 

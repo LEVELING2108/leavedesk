@@ -8,6 +8,7 @@ import { Pagination } from '../components/Pagination';
 import { StatusBadge } from '../components/StatusBadge';
 import { EmptyState, ErrorState, Loading } from '../components/States';
 import { capitalize, formatDate } from '../utils/format';
+import { cleanParams } from '../utils/params';
 
 export default function MyLeavesPage() {
   const { user } = useAuth();
@@ -15,7 +16,7 @@ export default function MyLeavesPage() {
   const [actionError, setActionError] = useState('');
 
   const fetchLeaves = useCallback(
-    () => api.get('/leaves/mine', { params: clean(query) }).then((r) => r.data.data),
+    () => api.get('/leaves/mine', { params: cleanParams(query) }).then((r) => r.data.data),
     [query],
   );
   const { data, loading, error, reload } = useApi(fetchLeaves);
@@ -81,9 +82,4 @@ export default function MyLeavesPage() {
       </section>
     </>
   );
-}
-
-// Drops empty filters so the API's enums don't reject ''
-function clean(params) {
-  return Object.fromEntries(Object.entries(params).filter(([, v]) => v !== ''));
 }
