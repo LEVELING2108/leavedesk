@@ -1,6 +1,7 @@
 import { LeaveRequest, ACTIVE_STATUSES } from '../models/LeaveRequest.js';
 import { ApiError } from '../utils/ApiError.js';
 import { paginate } from '../utils/paginate.js';
+import { notifyUser } from '../sockets/notifier.js';
 
 const EMPLOYEE_FIELDS = 'name email role';
 
@@ -31,7 +32,9 @@ export async function createLeave(user, { type, startDate, endDate, reason }) {
     endDate,
     reason,
   });
-  return leave.populate('employee', EMPLOYEE_FIELDS);
+  await leave.populate('employee', EMPLOYEE_FIELDS);
+  notifyUser(leave.approver, 'leave:created', leave);
+  return leave;
 }
 
 export function listMine(user, query) {
@@ -62,6 +65,8 @@ export async function cancelLeave(user, id) {
 
   leave.status = 'cancelled';
   await leave.save();
+  await leave.populate('employee', EMPLOYEE_FIELDS);
+  notifyUser(leave.approver, 'leave:cancelled', leave);
   return leave;
 }
 
@@ -84,5 +89,6 @@ export async function reviewLeave(user, id, { status, comment }) {
     { path: 'reviewedBy', select: 'name' },
   ]);
   if (!updated) throw ApiError.conflict('Request was already decided');
+  notifyUser(updated.employee._id, 'leave:reviewed', updated);
   return updated;
 }
