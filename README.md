@@ -150,7 +150,7 @@ All responses use `{ success: true, data }` or `{ success: false, message, detai
 
 ✅ **Code0 was used** for this project's development.
 
-I used Code0 inside VS Code as a planning and implementation partner. It asked about the decisions that were mine to make: scope (everything, including real-time and admin), leave types without balances, and that it would implement while I reviewed. It then wrote a plan with a 12-task breakdown that I approved before any code changed. It worked through those tasks one at a time, running the test suite, the client build and the linter after each. All Git and GitHub operations (init, commits, repo creation, push) were run from the Code0 terminal.
+I used Code0 inside VS Code as a planning and implementation partner. It asked about the decisions that were mine to make: scope (everything, including real-time and admin), leave types without balances, and that it would implement while I reviewed. It then wrote a plan with a 12-task breakdown that I approved before any code changed. It worked through those tasks one at a time, running the test suite, the client build and the linter after each. Most Git and GitHub operations (init, commits, repo creation, push) were run from the Code0 terminal; a few commits and pushes near the end were made with Claude Code.
 
 ### Tasks where Code0 helped
 
