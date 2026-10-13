@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import mongoose from 'mongoose';
+import authRoutes from './auth.js';
 
 const router = Router();
 
@@ -11,7 +12,7 @@ router.get('/health', (_req, res) => {
   });
 });
 
-// TODO: router.use('/auth', authRoutes);
+router.use('/auth', authRoutes);
 // TODO: router.use('/users', userRoutes);
 // TODO: router.use('/leaves', leaveRoutes);
 
