@@ -1,0 +1,10 @@
+node_modules/
+dist/
+coverage/
+.env
+.env.local
+*.log
+.DS_Store
+.vscode/
+# Personal assessment tracker
+ASSESSMENT_CHECKLIST.md
