@@ -3,14 +3,15 @@ import { Server } from 'socket.io';
 import { env } from './config/env.js';
 import { connectDB, disconnectDB } from './config/db.js';
 import { createApp } from './app.js';
+import { initSockets } from './sockets/index.js';
 
 const app = createApp();
 const server = http.createServer(app);
 
-export const io = new Server(server, {
+const io = new Server(server, {
   cors: { origin: env.clientUrl, credentials: true },
 });
-// TODO: authenticate sockets with the JWT and join a per-user room (src/sockets/)
+initSockets(io);
 
 async function start() {
   await connectDB(env.mongoUri);
@@ -19,7 +20,8 @@ async function start() {
 
 async function shutdown(signal) {
   console.log(`${signal} received, shutting down`);
-  server.close();
+  io.close(); // disconnects sockets and closes the HTTP server
+
   await disconnectDB();
   process.exit(0);
 }
