@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react';
 import { api, getErrorMessage } from '../api/client';
 import { useApi } from '../hooks/useApi';
 import { useAuth } from '../hooks/useAuth';
+import { useLeaveEvents } from '../hooks/useLeaveEvents';
 import { LeaveFilters } from '../components/LeaveFilters';
 import { Pagination } from '../components/Pagination';
 import { StatusBadge } from '../components/StatusBadge';
@@ -20,6 +21,7 @@ export default function ApprovalsPage() {
     [query],
   );
   const { data, loading, error, reload } = useApi(fetchApprovals);
+  useLeaveEvents(reload);
 
   async function review(leave, status) {
     const comment = window.prompt(`${status === 'approved' ? 'Approve' : 'Reject'} ${leave.employee.name}'s leave. Comment (optional):`, '');

@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react';
 import { api, getErrorMessage } from '../api/client';
 import { useApi } from '../hooks/useApi';
 import { useAuth } from '../hooks/useAuth';
+import { useLeaveEvents } from '../hooks/useLeaveEvents';
 import { LeaveForm } from '../components/LeaveForm';
 import { LeaveFilters } from '../components/LeaveFilters';
 import { Pagination } from '../components/Pagination';
@@ -20,6 +21,7 @@ export default function MyLeavesPage() {
     [query],
   );
   const { data, loading, error, reload } = useApi(fetchLeaves);
+  useLeaveEvents(reload);
 
   async function cancel(id) {
     if (!window.confirm('Cancel this leave request?')) return;
