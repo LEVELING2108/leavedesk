@@ -1,31 +1,24 @@
-import { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { api, getErrorMessage } from './api/client';
+import { AuthProvider } from './context/AuthProvider';
+import { ProtectedRoute } from './routes/ProtectedRoute';
+import { Layout } from './components/Layout';
 
-function Home() {
-  const [health, setHealth] = useState('checking...');
-
-  useEffect(() => {
-    api.get('/health')
-      .then(({ data }) => setHealth(`API ${data.status}, DB ${data.db}`))
-      .catch((err) => setHealth(`API unreachable: ${getErrorMessage(err)}`));
-  }, []);
-
-  return (
-    <main style={{ padding: 24 }}>
-      <h1>LeaveDesk</h1>
-      <p>{health}</p>
-    </main>
-  );
+function Placeholder() {
+  return <h1>LeaveDesk</h1>;
 }
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        {/* TODO: /login, /register, role-protected dashboards */}
-      </Routes>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route element={<ProtectedRoute />}>
+            <Route element={<Layout />}>
+              <Route path="/" element={<Placeholder />} />
+            </Route>
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
