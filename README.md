@@ -162,10 +162,19 @@ I used Code0 inside VS Code as a planning and implementation partner. It asked a
 
 ### Validating suggestions
 
-TODO (write in your own words): how you checked Code0's output, for example reading each diff, running `npm test` and the app, or trying the API by hand. Include at least one suggestion you corrected or rejected, and why.
+- **Plan first.** I reviewed and approved Code0's 12-task plan before any code was written, and made the scope calls myself (real-time and admin included, leave types without balances).
+- **Automated checks after every task.** The API test suite (now 50 tests), the client build and the linter ran after each task, and I re-ran all three before submitting.
+- **Manual end-to-end test.** I seeded the demo accounts and ran the app with an employee and a manager signed in to two separate browser sessions. The employee applied for leave, the manager got a toast and the Approvals list refreshed without a reload, then the manager approved it and the employee got a toast back.
+- **A suggestion I didn't follow.** At the end, Code0 suggested re-committing everything as six large commits (`git add server`, `git add client`, …). By then the work was already committed one task at a time, so those commands would have produced empty or misleading commits. I kept the per-task history, because it shows how the project was actually built.
+- **Second review.** I also used Claude Code to review the Git history and re-run the checks before opening the pull request.
 
 ### Issues resolved
 
-TODO (write in your own words): a technical problem you hit during development and how you debugged it.
+**Linter warnings after the My Leaves task.** `oxlint` reported three problems:
+
+1. **Constants exported from a component file (two warnings).** The leave-type and status lists were exported from a React component file. Vite's Fast Refresh can only hot-reload files that export nothing but components, so any edit to that file forced a full page reload. Fix: move them into `client/src/utils/constants.js`, next to the server enums they mirror.
+2. **Setting state inside an effect.** The data-loading hook `useApi` called `setLoading(true)` at the start of its `useEffect`. That causes an extra render every time it fetches, and keeping `loading` in sync by hand is easy to get wrong. Fix: `loading` is now **derived**. Each result remembers which request produced it, so `loading` is simply "the latest result isn't for the current request yet." The same change drops stale responses, so a slow reply from an earlier filter can't overwrite a newer one.
+
+Lint was clean after the change and the tests still passed.
 
 > Note: the initial project scaffold (folder layout, config files, dependency setup) was prepared with Claude Code before development began in Code0.
